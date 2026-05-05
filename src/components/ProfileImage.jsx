@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { useState } from 'react'
 
 export default function ProfileImage() {
-  const [imageSrc, setImageSrc] = useState('/profile.jpeg')
+  const [imageSrc, setImageSrc] = useState('profile.jpg')
 
   return (
     <motion.div
@@ -23,7 +23,7 @@ export default function ProfileImage() {
           src={imageSrc}
           alt="Mohammed Sinan profile"
           className="h-full w-full rounded-[20px] object-cover"
-          onError={() => setImageSrc('/profile.jpeg')}
+          onError={() => setImageSrc('profile.jpg')}
         />
         <div className="pointer-events-none absolute inset-3 rounded-[20px] bg-gradient-to-t from-ink/65 via-transparent to-white/10" />
       </motion.div>
