@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { ArrowUpRight, Code2, Mail, Palette, Smartphone, Sparkles } from 'lucide-react'
+import { ArrowUpRight, Code2, Mail, Palette, Smartphone, Sparkles, Download } from 'lucide-react'
 import ProfileImage from './components/ProfileImage.jsx'
 import Scene from './components/Scene.jsx'
 import Section from './components/Section.jsx'
@@ -66,6 +66,9 @@ function Hero() {
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
             <a href="#projects" className="inline-flex items-center justify-center gap-2 rounded-full bg-silver px-6 py-3 font-semibold text-ink shadow-premium transition hover:-translate-y-1 hover:bg-white">
               View Projects <ArrowUpRight className="h-4 w-4" />
+            </a>
+            <a href="resume.pdf" download="Mohammed_Sinan_Resume.pdf" className="inline-flex items-center justify-center gap-2 rounded-full border border-cyanSoft/30 bg-cyanSoft/10 px-6 py-3 font-semibold text-cyanSoft backdrop-blur-xl transition hover:-translate-y-1 hover:border-cyanSoft/60 hover:bg-cyanSoft/20">
+              Download CV <Download className="h-4 w-4" />
             </a>
             <a href="#contact" className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.055] px-6 py-3 font-semibold text-white backdrop-blur-xl transition hover:-translate-y-1 hover:border-cyanSoft/40">
               Contact Me <Mail className="h-4 w-4" />
