@@ -34,7 +34,7 @@ export const projects = [
   {
     name: 'Pulse',
     description:
-      'Real-time news and crypto app with category filtering, search, REST APIs, offline caching, Firebase Auth, and simplified news explanations.',
+      'Real-time currency exchange rate and crypto app with category filtering, search, REST APIs, offline caching, Firebase Auth, and simplified news explanations.',
     tech: ['Flutter', 'REST API', 'Dio', 'Firebase Auth'],
     github: 'https://github.com/sinanmhd007/Pulse',
   },
