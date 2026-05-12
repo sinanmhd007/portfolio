@@ -25,11 +25,11 @@ export const projects = [
     github: 'https://github.com/sinanmhd007/ControlX',
   },
   {
-    name: 'HabitBot',
+    name: 'NearNow',
     description:
-      'Habit tracker with automated reminder workflows using Firebase, Dio, n8n webhooks, ngrok, and external messaging APIs.',
-    tech: ['Flutter', 'Firebase', 'Dio', 'n8n'],
-    github: 'https://github.com/sinanmhd007/HabitBot',
+      'NearNow is a Flutter-based emergency assistance application designed to help users instantly find nearby essential services such as hospitals, pharmacies, petrol pumps, ATMs, blood banks, and police stations using real-time location tracking.',
+    tech: ['Flutter', 'Geolocator', 'OpenStreetMap', 'Hive'],
+    github: 'https://github.com/sinanmhd007/NearNow',
   },
   {
     name: 'Pulse',
