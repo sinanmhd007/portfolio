@@ -69,41 +69,48 @@ function CursorBackground() {
 }
 
 function SplashScreen({ onDone }) {
-  const quote = 'build yourself, brick by brick'
+  const quote = '“Build yourself, brick by brick.”'
   const [typedText, setTypedText] = useState('')
   const [started, setStarted] = useState(false)
   const audioRef = useRef(null)
+  const timersRef = useRef([])
 
   useEffect(() => {
+    const introDelay = 350
+    const typeDuration = 5000
+    const holdDuration = 2000
+
     const startTimer = window.setTimeout(() => {
       setStarted(true)
+
       if (audioRef.current) {
         audioRef.current.currentTime = 0
         audioRef.current.volume = 0.45
         audioRef.current.play().catch(() => {})
       }
-    }, 350)
-    const typeTimer = window.setInterval(() => {
-      setTypedText((current) => {
-        if (current.length >= quote.length) return current
-        return quote.slice(0, current.length + 1)
-      })
-    }, 145)
+    }, introDelay)
+
+    const typeTimers = Array.from({ length: quote.length }, (_, index) =>
+      window.setTimeout(
+        () => setTypedText(quote.slice(0, index + 1)),
+        introDelay + Math.round(((index + 1) / quote.length) * typeDuration),
+      ),
+    )
+
     const stopAudioTimer = window.setTimeout(() => {
       if (audioRef.current) {
         audioRef.current.pause()
         audioRef.current.currentTime = 0
       }
-    }, 5000)
-    const doneTimer = window.setTimeout(onDone, 5000)
+    }, introDelay + typeDuration)
+
+    const doneTimer = window.setTimeout(onDone, introDelay + typeDuration + holdDuration)
+    timersRef.current = [startTimer, ...typeTimers, stopAudioTimer, doneTimer]
 
     return () => {
-      window.clearTimeout(startTimer)
-      window.clearInterval(typeTimer)
-      window.clearTimeout(stopAudioTimer)
-      window.clearTimeout(doneTimer)
+      timersRef.current.forEach((timer) => window.clearTimeout(timer))
     }
-  }, [onDone])
+  }, [onDone, quote])
 
   return (
     <motion.div
@@ -133,11 +140,11 @@ function SplashScreen({ onDone }) {
       />
       <motion.div
         initial={{ opacity: 0, y: 18 }}
-        animate={{ opacity: started ? 1 : 0, y: started ? 0 : 18 }}
+        animate={{ opacity: 1, y: started ? 0 : 18 }}
         transition={{ duration: 0.55, ease: 'easeOut' }}
         className="relative w-full max-w-4xl text-center"
       >
-        <p className="min-h-[1.1em] font-display text-[clamp(1.8rem,5.6vw,4.8rem)] font-semibold leading-none tracking-tight text-white drop-shadow-[0_0_28px_rgba(125,220,255,0.24)]">
+        <p className="min-h-[1.1em] font-display text-[clamp(1.55rem,4.6vw,3.9rem)] font-semibold leading-none tracking-tight text-white drop-shadow-[0_0_28px_rgba(125,220,255,0.24)]">
           {typedText}
           <motion.span
             animate={{ opacity: [0, 1, 0] }}
@@ -145,12 +152,6 @@ function SplashScreen({ onDone }) {
             className="ml-2 inline-block h-[0.78em] w-[0.08em] translate-y-[0.08em] bg-cyanSoft"
           />
         </p>
-        <motion.div
-          initial={{ scaleX: 0 }}
-          animate={{ scaleX: 1 }}
-          transition={{ delay: 0.35, duration: 4.45, ease: 'linear' }}
-          className="mx-auto mt-8 h-px w-[min(70vw,460px)] origin-left bg-gradient-to-r from-cyanSoft via-white to-transparent"
-        />
       </motion.div>
     </motion.div>
   )
@@ -159,7 +160,7 @@ function SplashScreen({ onDone }) {
 function Nav() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 px-4 py-4 sm:px-6">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/10 bg-ink/55 px-4 py-3 shadow-premium backdrop-blur-xl">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between rounded-full border border-white/10 bg-panel/85 px-4 py-3 shadow-premium backdrop-blur-xl">
         <a href="#home" className="grid h-10 w-10 place-items-center rounded-full bg-white text-sm font-bold text-ink">
           MS
         </a>
@@ -270,7 +271,7 @@ function Hero() {
 
 function About() {
   return (
-    <Section id="about" eyebrow="About" title="Flutter developer focused on clean, reliable mobile products.">
+    <Section id="about" eyebrow="About" title="Flutter developer focused on clean, reliable mobile products." className="pb-7 lg:pb-8">
       <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.8fr]">
         <TiltCard className="p-8">
           <p className="text-lg leading-9 text-silver/80">
@@ -291,7 +292,7 @@ function About() {
             ))}
           </div>
         </TiltCard>
-        <div className="relative min-h-72">
+        <div className="relative min-h-40 sm:min-h-48 lg:min-h-72">
           <div className="absolute left-1/2 top-1/2 h-44 w-44 -translate-x-1/2 -translate-y-1/2 rounded-[38px] border border-cyanSoft/20 bg-cyanSoft/10 shadow-glow backdrop-blur-xl animate-float" />
           <div className="absolute left-[18%] top-[18%] h-24 w-24 rotate-12 rounded-3xl border border-white/10 bg-white/[0.06] backdrop-blur-xl animate-float-delayed" />
           <div className="absolute bottom-[12%] right-[16%] h-28 w-28 -rotate-12 rounded-full border border-white/10 bg-silver/10 backdrop-blur-xl animate-float-slow" />
@@ -303,7 +304,7 @@ function About() {
 
 function Experience() {
   return (
-    <Section id="experience" eyebrow="Experience" title="Hands-on professional work in Flutter delivery.">
+    <Section id="experience" eyebrow="Experience" title="Hands-on professional work in Flutter delivery." className="pt-7 lg:pt-8">
       <div className="grid gap-6">
         {experience.map((item, index) => (
           <TiltCard key={item.company} delay={index * 0.08} className="overflow-hidden p-6 sm:p-8">
@@ -330,17 +331,30 @@ function Experience() {
 }
 
 function Skills() {
+  const slidingSkills = [...skills, ...skills]
+
   return (
     <Section id="skills" eyebrow="Skills" title="Core tools for cross-platform app development.">
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-        {skills.map((skill, index) => (
-          <TiltCard key={skill.name} delay={index * 0.06} className="p-5 text-center">
-            <div className={`mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br ${skill.tone} text-lg font-black text-ink shadow-premium`}>
-              {skill.name.slice(0, 2).toUpperCase()}
+      <div className="relative overflow-hidden py-2">
+        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-16 bg-gradient-to-r from-ink to-transparent" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-16 bg-gradient-to-l from-ink to-transparent" />
+        <motion.div
+          animate={{ x: ['0%', '-50%'] }}
+          transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
+          className="flex w-max gap-5"
+        >
+          {slidingSkills.map((skill, index) => (
+            <div
+              key={`${skill.name}-${index}`}
+              className="w-48 shrink-0 rounded-2xl border border-white/10 bg-white/[0.055] p-5 text-center shadow-premium backdrop-blur-xl transition hover:-translate-y-2 hover:border-cyanSoft/35 hover:bg-white/[0.08]"
+            >
+              <div className={`mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-gradient-to-br ${skill.tone} text-lg font-black text-ink shadow-premium`}>
+                {skill.name.slice(0, 2).toUpperCase()}
+              </div>
+              <h3 className="font-semibold text-white">{skill.name}</h3>
             </div>
-            <h3 className="font-semibold text-white">{skill.name}</h3>
-          </TiltCard>
-        ))}
+          ))}
+        </motion.div>
       </div>
     </Section>
   )
@@ -441,6 +455,9 @@ export default function App() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-ink text-white">
       <CursorBackground />
+      <motion.div animate={{ opacity: showSplash ? 0 : 1 }} transition={{ duration: 0.45 }} className="relative z-50">
+        <Nav />
+      </motion.div>
       <motion.div
         animate={{
           opacity: showSplash ? 0.35 : 1,
@@ -450,7 +467,6 @@ export default function App() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10"
       >
-        <Nav />
         <Hero />
         <About />
         <Experience />
