@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { ArrowUpRight, BriefcaseBusiness, Code2, Download, Mail, Palette, Smartphone, Sparkles } from 'lucide-react'
 import ProfileImage from './components/ProfileImage.jsx'
 import Section from './components/Section.jsx'
@@ -69,14 +69,38 @@ function CursorBackground() {
 }
 
 function SplashScreen({ onDone }) {
-  const [startWriting, setStartWriting] = useState(false)
+  const quote = 'build yourself, brick by brick'
+  const [typedText, setTypedText] = useState('')
+  const [started, setStarted] = useState(false)
+  const audioRef = useRef(null)
 
   useEffect(() => {
-    const writeTimer = window.setTimeout(() => setStartWriting(true), 450)
-    const doneTimer = window.setTimeout(onDone, 3600)
+    const startTimer = window.setTimeout(() => {
+      setStarted(true)
+      if (audioRef.current) {
+        audioRef.current.currentTime = 0
+        audioRef.current.volume = 0.45
+        audioRef.current.play().catch(() => {})
+      }
+    }, 350)
+    const typeTimer = window.setInterval(() => {
+      setTypedText((current) => {
+        if (current.length >= quote.length) return current
+        return quote.slice(0, current.length + 1)
+      })
+    }, 145)
+    const stopAudioTimer = window.setTimeout(() => {
+      if (audioRef.current) {
+        audioRef.current.pause()
+        audioRef.current.currentTime = 0
+      }
+    }, 5000)
+    const doneTimer = window.setTimeout(onDone, 5000)
 
     return () => {
-      window.clearTimeout(writeTimer)
+      window.clearTimeout(startTimer)
+      window.clearInterval(typeTimer)
+      window.clearTimeout(stopAudioTimer)
       window.clearTimeout(doneTimer)
     }
   }, [onDone])
@@ -84,54 +108,50 @@ function SplashScreen({ onDone }) {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 1.08, filter: 'blur(12px)' }}
-      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[999] grid place-items-center overflow-hidden bg-transparent"
+      exit={{ opacity: 0, scale: 1.03, filter: 'blur(10px)' }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[999] grid place-items-center overflow-hidden bg-transparent px-5 py-8"
     >
+      <audio ref={audioRef} src="typing.mp3" preload="auto" />
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.45 }}
-        className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
+        className="absolute inset-0 bg-black/72 backdrop-blur-[2px]"
       />
-      <div className="relative px-6 text-center">
-        <motion.p
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: startWriting ? 1 : 0, y: startWriting ? 0 : 18 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="mb-5 text-xs font-semibold uppercase tracking-[0.42em] text-cyanSoft/80"
-        >
-          Portfolio
-        </motion.p>
-        <div className="relative mx-auto w-[min(88vw,760px)] overflow-hidden py-5">
-          <motion.h1
-            initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
-            animate={{
-              clipPath: startWriting ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
-              opacity: startWriting ? 1 : 0,
-            }}
-            transition={{ duration: 1.95, ease: [0.16, 1, 0.3, 1] }}
-            className="whitespace-nowrap text-[clamp(3.2rem,10vw,8.8rem)] font-normal leading-none text-white drop-shadow-[0_0_32px_rgba(125,220,255,0.32)]"
-            style={{
-              fontFamily: '"Segoe Script", "Brush Script MT", "Lucida Handwriting", cursive',
-            }}
-          >
-            Mohammed Sinan
-          </motion.h1>
+      <motion.div
+        initial={{ x: '-120%', opacity: 0 }}
+        animate={{ x: started ? '120%' : '-120%', opacity: started ? [0, 0.72, 0] : 0 }}
+        transition={{ duration: 3.7, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-cyanSoft/14 to-transparent blur-2xl"
+      />
+      <motion.div
+        initial={{ scaleX: 0 }}
+        animate={{ scaleX: started ? 1 : 0 }}
+        transition={{ duration: 3.8, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-x-0 top-1/2 h-px origin-center bg-gradient-to-r from-transparent via-white/18 to-transparent"
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 18 }}
+        animate={{ opacity: started ? 1 : 0, y: started ? 0 : 18 }}
+        transition={{ duration: 0.55, ease: 'easeOut' }}
+        className="relative w-full max-w-4xl text-center"
+      >
+        <p className="min-h-[1.1em] font-display text-[clamp(1.8rem,5.6vw,4.8rem)] font-semibold leading-none tracking-tight text-white drop-shadow-[0_0_28px_rgba(125,220,255,0.24)]">
+          {typedText}
           <motion.span
-            initial={{ x: '-8%', opacity: 0 }}
-            animate={{ x: startWriting ? '102%' : '-8%', opacity: startWriting ? [0, 1, 1, 0] : 0 }}
-            transition={{ duration: 2.05, ease: [0.16, 1, 0.3, 1] }}
-            className="absolute top-1/2 h-16 w-16 -translate-y-1/2 rounded-full bg-cyanSoft/45 blur-xl"
+            animate={{ opacity: [0, 1, 0] }}
+            transition={{ duration: 0.75, repeat: Infinity, ease: 'linear' }}
+            className="ml-2 inline-block h-[0.78em] w-[0.08em] translate-y-[0.08em] bg-cyanSoft"
           />
-        </div>
+        </p>
         <motion.div
-          initial={{ scaleX: 0, opacity: 0 }}
-          animate={{ scaleX: startWriting ? 1 : 0, opacity: startWriting ? 1 : 0 }}
-          transition={{ delay: 1.1, duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-2 h-px w-56 origin-left bg-gradient-to-r from-transparent via-cyanSoft to-transparent"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ delay: 0.35, duration: 4.45, ease: 'linear' }}
+          className="mx-auto mt-8 h-px w-[min(70vw,460px)] origin-left bg-gradient-to-r from-cyanSoft via-white to-transparent"
         />
-      </div>
+      </motion.div>
     </motion.div>
   )
 }
@@ -416,6 +436,7 @@ function Footer() {
 
 export default function App() {
   const [showSplash, setShowSplash] = useState(true)
+  const finishSplash = useCallback(() => setShowSplash(false), [])
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-ink text-white">
@@ -439,7 +460,7 @@ export default function App() {
         <Contact />
         <Footer />
       </motion.div>
-      <AnimatePresence>{showSplash && <SplashScreen onDone={() => setShowSplash(false)} />}</AnimatePresence>
+      <AnimatePresence>{showSplash && <SplashScreen onDone={finishSplash} />}</AnimatePresence>
     </main>
   )
 }
