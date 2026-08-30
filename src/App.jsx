@@ -69,14 +69,14 @@ function CursorBackground() {
 }
 
 function SplashScreen({ onDone }) {
-  const [showLogo, setShowLogo] = useState(false)
+  const [startWriting, setStartWriting] = useState(false)
 
   useEffect(() => {
-    const logoTimer = window.setTimeout(() => setShowLogo(true), 2000)
-    const doneTimer = window.setTimeout(onDone, 4300)
+    const writeTimer = window.setTimeout(() => setStartWriting(true), 450)
+    const doneTimer = window.setTimeout(onDone, 3600)
 
     return () => {
-      window.clearTimeout(logoTimer)
+      window.clearTimeout(writeTimer)
       window.clearTimeout(doneTimer)
     }
   }, [onDone])
@@ -84,34 +84,54 @@ function SplashScreen({ onDone }) {
   return (
     <motion.div
       initial={{ opacity: 1 }}
-      exit={{ opacity: 0, y: -28, scale: 1.04 }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed inset-0 z-[999] grid place-items-center overflow-hidden bg-black"
+      exit={{ opacity: 0, scale: 1.08, filter: 'blur(12px)' }}
+      transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
+      className="fixed inset-0 z-[999] grid place-items-center overflow-hidden bg-transparent"
     >
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: showLogo ? 1 : 0 }}
-        transition={{ duration: 0.9, ease: 'easeOut' }}
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(125,220,255,0.08),transparent_28rem)]"
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.45 }}
+        className="absolute inset-0 bg-ink/45 backdrop-blur-[2px]"
       />
-      <motion.img
-        src="splash.png"
-        alt="Mohammed Sinan portfolio splash"
-        initial={{ opacity: 0, scale: 0.86, filter: 'blur(18px)' }}
-        animate={{
-          opacity: showLogo ? 1 : 0,
-          scale: showLogo ? 1 : 0.86,
-          filter: showLogo ? 'blur(0px)' : 'blur(18px)',
-        }}
-        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className="h-full w-full object-contain p-8 sm:p-12"
-      />
-      <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: showLogo ? 1 : 0 }}
-        transition={{ duration: 1.65, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute bottom-10 h-px w-40 origin-left bg-gradient-to-r from-cyanSoft via-white to-transparent"
-      />
+      <div className="relative px-6 text-center">
+        <motion.p
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: startWriting ? 1 : 0, y: startWriting ? 0 : 18 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+          className="mb-5 text-xs font-semibold uppercase tracking-[0.42em] text-cyanSoft/80"
+        >
+          Portfolio
+        </motion.p>
+        <div className="relative mx-auto w-[min(88vw,760px)] overflow-hidden py-5">
+          <motion.h1
+            initial={{ clipPath: 'inset(0 100% 0 0)', opacity: 0 }}
+            animate={{
+              clipPath: startWriting ? 'inset(0 0% 0 0)' : 'inset(0 100% 0 0)',
+              opacity: startWriting ? 1 : 0,
+            }}
+            transition={{ duration: 1.95, ease: [0.16, 1, 0.3, 1] }}
+            className="whitespace-nowrap text-[clamp(3.2rem,10vw,8.8rem)] font-normal leading-none text-white drop-shadow-[0_0_32px_rgba(125,220,255,0.32)]"
+            style={{
+              fontFamily: '"Segoe Script", "Brush Script MT", "Lucida Handwriting", cursive',
+            }}
+          >
+            Mohammed Sinan
+          </motion.h1>
+          <motion.span
+            initial={{ x: '-8%', opacity: 0 }}
+            animate={{ x: startWriting ? '102%' : '-8%', opacity: startWriting ? [0, 1, 1, 0] : 0 }}
+            transition={{ duration: 2.05, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute top-1/2 h-16 w-16 -translate-y-1/2 rounded-full bg-cyanSoft/45 blur-xl"
+          />
+        </div>
+        <motion.div
+          initial={{ scaleX: 0, opacity: 0 }}
+          animate={{ scaleX: startWriting ? 1 : 0, opacity: startWriting ? 1 : 0 }}
+          transition={{ delay: 1.1, duration: 1.15, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto mt-2 h-px w-56 origin-left bg-gradient-to-r from-transparent via-cyanSoft to-transparent"
+        />
+      </div>
     </motion.div>
   )
 }
