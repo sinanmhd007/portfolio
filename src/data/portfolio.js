@@ -8,6 +8,17 @@ export const profile = {
   linkedin: 'https://www.linkedin.com/in/mohammed-sinan007',
 }
 
+export const experience = [
+  {
+    company: 'Fixail',
+    type: 'Internship',
+    role: 'Flutter Developer Intern',
+    period: 'Jun 1, 2026 - Aug 31, 2026',
+    logo: 'https://play-lh.googleusercontent.com/H7OaFkxLx1EntEAyAgg3XDT1BZW4sjK8vown-LdwhFJAScjK7O8biybiugdhUbqgFH27cl75Z-IRjLJwqzfPJQ',
+    summary: 'Built production-minded mobile features while sharpening Flutter UI, app structure, and delivery discipline.',
+  },
+]
+
 export const skills = [
   { name: 'Flutter', tone: 'from-sky-300 to-cyan-400' },
   { name: 'Dart', tone: 'from-blue-300 to-sky-500' },
