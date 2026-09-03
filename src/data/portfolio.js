@@ -13,7 +13,7 @@ export const experience = [
     company: 'Fixail',
     type: 'Internship',
     role: 'Flutter Developer Intern',
-    period: 'Jun 1, 2026 - Aug 31, 2026',
+    period: 'Mar, 2026 - Aug, 2026',
     logo: 'https://play-lh.googleusercontent.com/H7OaFkxLx1EntEAyAgg3XDT1BZW4sjK8vown-LdwhFJAScjK7O8biybiugdhUbqgFH27cl75Z-IRjLJwqzfPJQ',
     summary: 'Built production-minded mobile features while sharpening Flutter UI, app structure, and delivery discipline.',
   },
