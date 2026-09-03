@@ -318,6 +318,23 @@ function Experience() {
                 <h3 className="font-display text-3xl font-semibold text-white sm:text-4xl">{item.company}</h3>
                 <p className="mt-2 text-base font-semibold text-silver">{item.role}</p>
                 <p className="mt-4 max-w-3xl leading-7 text-muted">{item.summary}</p>
+                {item.projects && (
+                  <div className="mt-5 flex flex-wrap gap-3">
+                    {item.projects.map((project) => (
+                      <a
+                        key={project.name}
+                        href={project.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.055] px-4 py-2 text-sm font-semibold text-white transition hover:border-cyanSoft/40 hover:bg-cyanSoft/10"
+                      >
+                        <Smartphone className="h-4 w-4 text-cyanSoft" />
+                        {project.name}
+                        <ArrowUpRight className="h-4 w-4 text-muted" />
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
               <p className="rounded-2xl border border-white/10 bg-white/[0.045] px-4 py-3 text-sm font-semibold text-silver lg:text-right">
                 {item.period}

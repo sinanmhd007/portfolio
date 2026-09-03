@@ -16,6 +16,16 @@ export const experience = [
     period: 'Mar, 2026 - Aug, 2026',
     logo: 'https://play-lh.googleusercontent.com/H7OaFkxLx1EntEAyAgg3XDT1BZW4sjK8vown-LdwhFJAScjK7O8biybiugdhUbqgFH27cl75Z-IRjLJwqzfPJQ',
     summary: 'Built production-minded mobile features while sharpening Flutter UI, app structure, and delivery discipline.',
+    projects: [
+      {
+        name: 'Fixail - Home Services & Spares',
+        link: 'https://play.google.com/store/apps/details?id=com.fixail.android&hl=en_IN',
+      },
+      {
+        name: 'Fixail Partner',
+        link: 'https://play.google.com/store/apps/details?id=com.fixail.worker_android&hl=en_IN',
+      },
+    ],
   },
 ]
 
